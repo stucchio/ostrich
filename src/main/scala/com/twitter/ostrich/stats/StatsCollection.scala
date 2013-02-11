@@ -182,7 +182,7 @@ class StatsCollection extends StatsProvider with JsonSerializable {
     if (gauge != null) {
       try {
         Some(gauge())
-      } catch { case e =>
+      } catch { case e: Exception =>
         log.error(e, "Gauge error: %s", name)
         None
       }
@@ -212,7 +212,7 @@ class StatsCollection extends StatsProvider with JsonSerializable {
     for ((key, gauge) <- gaugeMap.asScala) {
       try {
         gauges += (key -> gauge())
-      } catch { case e =>
+      } catch { case e: Exception =>
         log.error(e, "Gauge error: %s", key)
       }
     }

@@ -64,7 +64,7 @@ abstract class CustomHttpHandler extends HttpHandler {
     try {
       Source.fromInputStream(stream).mkString
     } catch {
-      case e =>
+      case e: Exception =>
         log.error(e, "Unable to load Resource from Classpath: %s", name)
         throw e
     }
@@ -153,7 +153,7 @@ abstract class CgiRequestHandler extends CustomHttpHandler {
 
       handle(exchange, path, parameters)
     } catch {
-      case e =>
+      case e: Exception =>
         render("exception while processing request: " + e, exchange, 500)
         log.error(e, "Exception processing admin http request")
     }
@@ -281,7 +281,7 @@ class TracingHandler extends CgiRequestHandler {
         return
       }
     } catch {
-      case _ =>
+      case _: Exception =>
         render("Could not initialize Finagle tracing classes. Possibly old version of Finagle.",
           exchange)
         return
@@ -343,7 +343,7 @@ class CommandRequestHandler(commandHandler: CommandHandler) extends CgiRequestHa
         render("no such command\n", exchange, 404)
       case e: InvalidCommandOptionError =>
         render(e.getMessage + '\n', exchange, 400)
-      case unknownException =>
+      case unknownException: Exception =>
         render("error processing command: " + unknownException, exchange, 500)
         unknownException.printStackTrace()
     }

@@ -57,7 +57,7 @@ class RuntimeEnvironment(obj: AnyRef) {
   try {
     buildProperties.load(obj.getClass.getResource("build.properties").openStream)
   } catch {
-    case _ =>
+    case _: Exception =>
   }
 
   val jarName = buildProperties.getProperty("name", "unknown")
@@ -243,7 +243,7 @@ class RuntimeEnvironment(obj: AnyRef) {
         Logger.get("").fatal(e.getMessage)
         System.exit(1)
         throw new Exception("which will never execute because of the System.exit above me.")
-      case e =>
+      case e: Exception =>
         initLogs()
         Logger.get("").fatal(e, "Error in config file: %s", configFile)
         System.exit(1)
@@ -255,7 +255,7 @@ class RuntimeEnvironment(obj: AnyRef) {
     try {
       loadConfig[RuntimeEnvironment => T]()(this)
     } catch {
-      case e =>
+      case e: Exception =>
         initLogs()
         Logger.get("").fatal(e, "Error in config file: %s", configFile)
         System.exit(1)
